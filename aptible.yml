@@ -1,0 +1,5 @@
+version: 0
+name: automated_pipeline
+services:
+  web:
+    command: ["python", "run.py"]
