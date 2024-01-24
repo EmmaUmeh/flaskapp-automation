@@ -14,7 +14,7 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            docker build -t automated-pipeline:latest .
+            docker build -t flask-app:latest .
             docker images
          
 
