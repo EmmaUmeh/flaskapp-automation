@@ -16,9 +16,39 @@ jobs:
           command: |
             docker build -t flask-app:latest .
             docker images
-            apt-get update && apt-get install -y git openssh-client
+
+  deploy:
+    docker:
+      - image: docker:19.03.12
+
+    steps:
+      - checkout
+
+      - setup_remote_docker:
+          version: 19.03.12
+
+      - run:
+          name: Install Git and OpenSSH
+          command: |
+            apk add --no-cache git openssh-client
+
+      - run:
+          name: Configure SSH for Aptible
+          command: |
+            mkdir -p ~/.ssh
+            touch ~/.ssh/known_hosts
             ssh-keyscan beta.aptible.com >> ~/.ssh/known_hosts
+            echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+
+      - run:
+          name: Add Aptible Git Remote
+          command: |
             git remote add aptible git@beta.aptible.com:$APTIBLE_ENVIRONMENT/$APTIBLE_APP.git
+
+      - run:
+          name: Push to Aptible
+          command: |
             git push aptible $CIRCLE_SHA1:master
 
 workflows:
@@ -26,57 +56,6 @@ workflows:
   build_and_deploy:
     jobs:
       - build
-         
-
-          # command: |
-          #   docker build -t automated-pipeline:latest .
-          #   docker images
-          #   apt-get update && apt-get install -y git openssh-client
-          #   ssh-keyscan beta.aptible.com >> ~/.ssh/known_hosts
-          #   git remote add aptible git@beta.aptible.com:$APTIBLE_ENVIRONMENT/$APTIBLE_APP.git
-          #   git push aptible $CIRCLE_SHA1:master
-
-  #  apk add --no-cache git openssh-client
-  #           ssh-keyscan beta.aptible.com >> ~/.ssh/known_hosts
-  #           git remote add aptible git@beta.aptible.com:$APTIBLE_ENVIRONMENT/$APTIBLE_APP.git
-  #           git push aptible $CIRCLE_SHA1:main
-# version: 2.1
-
-# jobs:
-#   build:
-#     docker:
-#       - image: docker:19.03.12
-#     steps:
-#       - checkout
-#       - setup_remote_docker:
-#           version: 19.03.12
-#       - run:
-#           name: Build Docker Image
-#           command: |
-#             docker build -t automated-pipeline:latest .
-#             docker images
-#           context: .
-
-#   deploy:
-#     docker:
-#       - image: docker:19.03.12
-#     steps:
-#       - checkout
-#       - run:
-#           name: Deploy to Aptible
-#           command: |
-#             chmod +x deploy.sh
-#             ./deploy.sh
-#         environment:
-#          - APTIBLE_EMAIL=${emmachinemerem04@gmail.com}
-#           - APTIBLE_PASSWORD=${Emmanuel12++}
-#           - APTIBLE_GIT_REMOTE=${git@beta.aptible.com:flask-app/automated_deployment.git}
-# workflows:
-#   version: 2
-#   build_and_deploy:
-#     jobs:
-#       - build
-#       - deploy:
-#           requires:
-#             - build
-
+      - deploy:
+          requires:
+            - build
