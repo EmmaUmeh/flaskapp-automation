@@ -8,5 +8,5 @@ def add(number_One, number_Two):
     # Return the result
     return result
 
-result = add(5, 3)
+result = add(3, 3)
 print("The sum is:", result)
