@@ -7,7 +7,7 @@ app = Flask(__name__)
 def addition():
     # Call the add function
     sum_result = add(5, 3)
-    return f'Automated Deployment - The sum is: {sum_result}'
+    return f'The sum of the Automated Deployment is: {sum_result}'
 
 @app.route('/')
 def default_route():
