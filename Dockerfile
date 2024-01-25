@@ -10,6 +10,9 @@ RUN apk add --no-cache python3 && \
     pip3 install --upgrade pip && \
     pip3 install Flask
 
+    # Install Flask and prometheus_client
+RUN pip3 install Flask prometheus_client
+
 # Copy the current directory contents into the container at /app
 COPY . /app
 
