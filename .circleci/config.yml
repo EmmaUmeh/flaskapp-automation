@@ -47,7 +47,7 @@ jobs:
       - run:
           name: Push to Aptible
           command: |
-            git push aptible $CIRCLE_SHA1:main
+            git push aptible $CIRCLE_SHA1:refs/heads/main
 
 workflows:
   version: 2
