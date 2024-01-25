@@ -16,6 +16,12 @@ jobs:
           command: |
             docker build -t flask-app:latest .
             docker images
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build
          
 
           # command: |
@@ -25,12 +31,6 @@ jobs:
           #   ssh-keyscan beta.aptible.com >> ~/.ssh/known_hosts
           #   git remote add aptible git@beta.aptible.com:$APTIBLE_ENVIRONMENT/$APTIBLE_APP.git
           #   git push aptible $CIRCLE_SHA1:master
-
-workflows:
-  version: 2
-  build_and_deploy:
-    jobs:
-      - build
 
   #  apk add --no-cache git openssh-client
   #           ssh-keyscan beta.aptible.com >> ~/.ssh/known_hosts
