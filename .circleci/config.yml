@@ -32,6 +32,13 @@ jobs:
           command: |
             apk add --no-cache git openssh-client
 
+    - run:
+          name: Configure SSH for Aptible
+          command: |
+            ssh-keyscan beta.aptible.com >> ~/.ssh/known_hosts
+            echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+
       - run:
           name: Add Aptible Git Remote
           command: |
