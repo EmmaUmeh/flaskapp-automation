@@ -16,6 +16,10 @@ jobs:
           command: |
             docker build -t flask-app:latest .
             docker images
+            apt-get update && apt-get install -y git openssh-client
+            ssh-keyscan beta.aptible.com >> ~/.ssh/known_hosts
+            git remote add aptible git@beta.aptible.com:$APTIBLE_ENVIRONMENT/$APTIBLE_APP.git
+            git push aptible $CIRCLE_SHA1:master
 
 workflows:
   version: 2
