@@ -1,18 +1,20 @@
-# Use an official Docker image as a base image
-FROM alpine:latest
+# Use the official Alpine image with Python 3.8
+FROM python:3.8-alpine
 
-# Set the working directory
+# Set the working directory to /app
 WORKDIR /app
 
-# Copy the contents of the current directory into the container at /app
-COPY . /app
-
 # Install dependencies
-RUN pip install --no-cache-dir Flask
+RUN apk add --no-cache python3 && \
+    python3 -m ensurepip && \
+    pip3 install --upgrade pip && \
+    pip3 install Flask
 
+# Copy the current directory contents into the container at /app
+COPY . /app
 
 # Expose port 5000
 EXPOSE 5000
 
 # Define the command to run your application
-CMD ["python", "run.py"]
+CMD ["python3", "run.py"]
